@@ -1,6 +1,6 @@
 var Title_File = new Array (
  "Begin"                        ,   "Begin",
-  "../intro/cover.html"         ,   "Обложка",
+  "../intro/cover.html"         ,		"Обложка",
   "../intro/content.html"       ,   "Содержание",
   "../intro/preface.html"       ,   "Предисловие",
   "../intro/introduction.html"  ,   "Введение",
