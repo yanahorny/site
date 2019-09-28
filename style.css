@@ -1,0 +1,66 @@
+
+/*<agl.folder "Body elements">*/
+	body      { font: x-small Arial, Tahoma, Verdana; background-color: #ffffff }
+	p  { text-align: justify; margin-top: 0.75em; margin-bottom: 0.75em }
+	pre   { font-size: x-small; font-family: "Courier New", Courier; margin: 0 0; padding: 0 0 }
+	blockquote  { margin-top: 0; margin-bottom: 0; padding: 0 0 }
+	code { font: 100% "Courier New", Courier }
+	sup { font-size: smaller; text-decoration: none }
+	.watermark { color: #c0c0c0 }
+	.exercise    { font-size: 85%; background-color: #fff; margin-top: 1em; margin-bottom: 1em; margin-left: 2em; padding-right: 1em; padding-left: 1em }
+	.exercisetitle   { font-style: italic; text-decoration: underline; margin-bottom: 0.1em }
+/*</agl.folder>*/
+/*<agl.folder "Headers">*/
+	h1, h2, h3, h4  { color: #000000; font-family: Verdana, Arial, Tahoma; font-weight: bold }
+	h1 { font-size: 145%; margin-bottom: 0.5em }
+	h2 { font-size: 125%; margin-top: 1.5em; margin-bottom: 0.5em }
+	h3 { font-size: 115%; margin-top: 1.2em; margin-bottom: 0.5em }
+	h4 { font-size: 100%; margin-top: 1.2em; margin-bottom: 0.5em }
+/*</agl.folder>*/
+/*<agl.folder "Links">*/
+	a:visited { color: #660066 }
+	a:hover  { color: #ff9900 }
+	a:link { color: #0000FF }
+/*</agl.folder>*/
+/*<agl.folder "Table">*/
+	td  { font-size: x-small }
+	/*Info Table*/
+	table.intext   { margin-top: 0; margin-bottom: 0 }
+	td.cellcaption { font-weight: bold; background-color: #c0c0c0; padding: 0.2em 0.5em; vertical-align: middle }
+	td.celltext   { background-color: #dcdcdc; padding-right: 0.5em; padding-left: 0.5em; vertical-align: middle }
+	td.cellvalue    { background-color: #dcdcdc; padding-right: 1.75em; padding-left: 1.75em }
+	/*Header Footer
+*/
+	td.topic       { color: #660033; font-size: x-small; font-family: Verdana, Arial, Tahoma; font-weight: bold; text-align: left; text-indent: 0.5em; vertical-align: bottom }
+	td.topnav   { font-size: xx-small; text-decoration: none; text-align: right; vertical-align: bottom }
+	td.bottomnav { font-size: xx-small; text-decoration: none; text-align: right; vertical-align: top }
+	td.footer     { color: #660033; font-size: xx-small; font-family: Arial; font-style: italic; text-align: left; vertical-align: top }
+	/*Content Table
+*/
+	table.content { font-size: x-small; width: 100% }
+	table.content a { text-decoration: none }
+	table.content pre  { font-size: x-small; font-family: "Courier New", Verdana, Arial, Tahoma; margin: 0 }
+	td.chapter { font-weight: bold; text-align: left; padding-top: 0.5em; padding-bottom: 0.1em; vertical-align: middle }
+	td.topiclist { font-size: x-small; text-align: left; vertical-align: middle }
+	td.appendix  { font-weight: bold; text-align: left; padding-top: 1.5em; padding-bottom: 0.75em; vertical-align: middle }
+/*</agl.folder>*/
+/*<agl.folder "Listing">*/
+	.cpp      { font-size: x-small; font-family: "Courier New"; background-color: #eeeeee; margin-top: 1em; margin-bottom: 1em; padding: 0.5em 1em }
+	.keyword { color: #00f }
+	.constant { }
+	.comment { color: #008000; font-style: italic }
+	.prgout  { font-family: "Courier New", Arial, Tahoma; background-color: #eeeeee; margin: 1em 4.5em 1em 2em; padding: 0.5em 1em }
+/*</agl.folder>*/
+/*<agl.folder "Lists">*/
+	UL UL, OL OL, OL UL, UL OL  { margin-top: 0.75em; margin-bottom: 0.75em }
+	LI  { margin-top: 0; margin-bottom: 0 }
+	LI P { margin-top: 0.5em; margin-bottom: 0.5em }
+	UL  { list-style: disc; margin-top: 0; margin-bottom: 0 }
+/*</agl.folder>*/
+/*<agl.folder "Other">*/
+	.tl { margin-bottom: 0.75em }
+	.atl { padding-bottom: 0.75em; padding-left: 1.5em }
+	.dt { margin-bottom: -1em }
+	.mini { font-size: smaller }
+	.cfe { font-weight: bold }
+/*</agl.folder>*/
