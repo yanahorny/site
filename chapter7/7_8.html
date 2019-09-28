@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=windows-1251">
+		<meta name="Description" content="K&R, 1st ed., 1978. Russian translation by <unknown>; chm-compiling by Sim&C, Belarus`2006">
+   		<title>7.8 Ввод и вывод строк</title>
+		<link href="../style.css" rel="stylesheet" type="text/css" media="all">
+	</head>
+
+	<body>
+	<script  language=JavaScript  src="../header.js"></script>
+	<pre>    Стандартная библиотека содержит функцию fgets, совершен-
+но аналогичную функции getline, которую мы использовали на
+всем протяжении книги. В результате обращения
+
+fgets(line, MAXLINE, fp)
+
+следующая строка ввода (включая символ новой строки) считы-
+вается из файла fp в символьный массив line; самое большое
+MAXLINE-1 символ будет прочитан. Результирующая строка за-
+канчивается символом \ 0. Нормально функция fgets возвращает
+line; в конце файла она возвращает NULL. (Наша функция
+getline возвращает длину строки, а при выходе на конец файла
+- нуль).
+    Предназначенная для вывода функция fputs записывает
+строку (которая не обязана содержать символ новой строки) в
+файл:
+
+ fputs(line, fp)
+
+    Чтобы показать, что в функциях типа fgets и fputs нет
+ничего таинственного, мы приводим их ниже, скопированными
+непосредственно из стандартной библиотеки ввода-вывода:
+
+#include  &lt;stdio.h&gt;
+
+char *fgets(s,n,iop) /*get at most n chars from iop*/
+char *s;
+int n;
+register FILE *iop;
+{
+  register int c;
+  register char *cs;
+  cs = s;
+  while(--n&gt;0 &amp;&amp; (c=getc(iop)) != EOF)
+    if ((*cs++ = c)=='\n')
+      break;
+  *cs = '\0';
+  return((c==eof &amp;&amp; cs==s) ? NULL : s);
+}
+
+fputs(s,iop) /*put string s on fils iop*/
+register char *s;
+register FILE *iop;
+{
+  register int c;
+  while (c = *s++)
+    putc(c,iop);
+}
+
+Упражнение 7-3
+    Напишите программу сравнения двух файлов, которая будет
+печатать первую строку и позицию символа, где они различают-
+ся.
+
+Упражнение 7-4
+    Переделайте программу поиска заданной комбинации симво-
+лов из главы 5 таким образом, чтобы в качестве ввода исполь-
+зовался набор именованных файлов или, если никакие файлы не
+указаны как аргументы, стандартный ввод. Следует ли печатать
+имя файла при нахождении подходящей строки?
+
+Упражнение 7-5
+    Напишите программу печати набора файлов, которая начина-
+ет каждый новый файл с новой страницы и печатает для каждого
+файла заголовок и счетчик текущих страниц.</pre>
+	<script  language=JavaScript  src="../footer.js"></script>
+	</body>
+	
+</html>

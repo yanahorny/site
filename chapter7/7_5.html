@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=windows-1251">
+		<meta name="Description" content="K&R, 1st ed., 1978. Russian translation by <unknown>; chm-compiling by Sim&C, Belarus`2006">
+   		<title>7.5 Форматное преобразование в памяти</title>
+		<link href="../style.css" rel="stylesheet" type="text/css" media="all">
+	</head>
+
+	<body>
+	<script  language=JavaScript  src="../header.js"></script>
+	<pre>    От функции scanf и printf происходят функции sscanf и
+sprintf, которые осуществляют аналогичные преобразования, но
+оперируют со строкой, а не с файлом. Обращения к этим функ-
+циям имеют вид:
+
+ sprintf(string, control, arg1, arg2, ...)
+ sscanf(string, control, arg1, arg2, ...)
+
+Как и раньше, функция sprintf преобразует свои аргументы
+arg1, arg2 и т.д. В соответствии с форматом, указанным в
+control, но помещает результаты в string, а не в стандартный
+вывод. Kонечно, строка string должна быть достаточно велика,
+чтобы принять результат. Например, если name - это символь-
+ный массив, а n - целое, то
+
+sprintf(name, &quot;temp%d&quot;, n);
+
+создает в name строку вида tempnnn, где nnn - значение N.
+    Функция sscanf выполняет обратные преобразования - она
+просматривает строку string в соответствии с форматом в ар-
+гументе control и помещает результирующие значения в аргу-
+менты arg1, arg2 и т.д. Эти аргументы должны быть указателя-
+ми. В результате обращения
+
+sscanf(name, &quot;temp%d&quot;, &amp;n);
+
+переменная n получает значение строки цифр, следующих за
+temp в name.
+
+Упражнение 7-2
+    Перепишите настольный калькулятор из главы 4, используя
+для ввода и преобразования чисел scanf и/или sscanf.</pre>
+	<script  language=JavaScript  src="../footer.js"></script>
+	</body>
+	
+</html>
