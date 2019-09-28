@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=windows-1251">
+		<meta name="Description" content="K&R, 1st ed., 1978. Russian translation by <unknown>; chm-compiling by Sim&C, Belarus`2006">
+   		<title>8.6 Пример - распечатка справочников</title>
+		<link href="../style.css" rel="stylesheet" type="text/css" media="all">
+	</head>
+
+	<body>
+	<script  language=JavaScript  src="../header.js"></script>
+	<pre>    Иногда требуется другой вид взаимодействия с системой
+файлов - определение информации о файле, а не того, что в
+нем содержится. Примером может служить команда ls ("список
+справочника") системы UNIX. По этой команде распечатываются
+имена файлов из справочника и, необязательно, другая инфор-
+мация, такая как размеры, разрешения и т.д.
+    Поскольку, по крайней мере, на системе UNIX справочник
+является просто файлом, то в такой команде, как ls нет ниче-
+го особенного; она читает файл и выделяет нужные части из
+находящейся там информации. Однако формат информации опреде-
+ляется системой, так что ls должна знать, в каком виде все
+представляется в системе.
+    Мы это частично проиллюстрируем при написании программы
+fsize. Программа fsize представляет собой специальную форму
+ls, которая печатает размеры всех файлов, указанных в списке
+ее аргументов. Если один из файлов является справочником, то
+для обработки этого справочника программа fsize обращается
+сама к себе рекурсивно. Если же аргументы вообще отсутству-
+ют, то обрабатывается текущий справочник.
+    Для начала дадим краткий обзор структуры системы файлов.
+Справочник - это файл, который содержит список имен файлов и
+некоторое указание о том, где они размещаются. Фактически
+это указание является индексом для другой таблицы, которую
+называют "i - узловой таблицей". Для файла i-узел - это то,
+где содержится вся информация о файле, за исключением его
+имени. Запись в справочнике состоит только из двух элемен-
+тов: номера i-узла и имени файла. Точная спецификация посту-
+пает при включении файла sys/dir.h, который содержит
+
+#define DIRSIZ 14 /*max length of file name*/
+struct direct /*structure of directory entry*/
+{
+  ino_t&_ino; /*inode number*/
+  char &_name[DIRSIZ]; /*file name*/
+};
+
+    "Тип" ino_t - это определяемый посредством typedef тип,
+который описывает индекс i-узловой таблицы. На PDP-11 UNIX
+этим типом оказывается unsigned, но это не тот сорт информа-
+ции, который помещают внутрь программы: на разных системах
+этот тип может быть различным. Поэтому и следует использо-
+вать typedef. Полный набор "системных" типов находится в
+файле sys/tupes.h.
+    Функция stat берет имя файла и возвращает всю содержащу-
+юся в i-ом узле информацию об этом файле (или -1, если име-
+ется ошибка). Таким образом, в результате
+
+struct stat stbuf;
+char *name;
+stat(name,&stbuf);
+
+структура stbuf наполняется информацией из i-го узла о файле
+с именем name. Структура, описывающая возвращаемую функцией
+stat информацию, находится в файле sys/stat.h и выглядит
+следующим образом:
+
+struct stat /*structure returned by stat*/
+{
+  dev_t st_dev;    /* device of inode */
+  ino_t st_ino;    /* inode number */
+  short st_mode    /* mode bits */
+  short st_nlink;  /* number of links to file */
+  short st_uid;    /* owner's user id */
+  short st_gid;    /* owner's group id */
+  dev_t st_rdev;   /* for special files */
+  off_t st_size;   /* file size in characters */
+  time_t st_atime; /* time last accessed */
+  time_t st_mtime; /* time last modified */
+  time_t st_ctime; /* time originally created */
+}
+
+Большая часть этой информации объясняется в комментариях.
+Элемент st_mode содержит набор флагов, описывающих файл; для
+удобства определения флагов также находятся в файле
+sys/stat.h.
+
+#define S_IFMT    0160000 /* type of file */
+#define S_IFDIR   0040000 /* directory */
+#define S_IFCHR   0020000 /* character special */
+#define S_IFBLK   0060000 /* block special */
+#define S_IFREG   0100000 /* regular */
+#define S_ISUID   04000   /* set user id on execution */
+#define S_ISGID   02000   /* set group id on execution */
+#define S_ISVTX   01000   /*save swapped text after use*/
+#define S_IREAD   0400    /* read permission */
+#define S_IWRITE  0200    /* write permission */
+#define S_IEXEC   0100    /* execute permission */
+
+    Теперь мы в состоянии написать программу fsize. Если по-
+лученный от функции stat режим указывает, что файл не явля-
+ется справочником, то его размер уже под рукой и может быть
+напечатан непосредственно. Если же он оказывается справочни-
+ком, то мы должны обрабатывать этот справочник отдельно для
+каждого файла; так как справочник может в свою очередь со-
+держать подсправочники, этот процесс обработки является ре-
+курсивным.
+    Как обычно, ведущая программа главным образом имеет дело
+с командной строкой аргументов; она передает каждый аргумент
+функции fsize в большой буфер.
+
+#include &lt;stdio.h.>
+#include &lt;sys/types.h> /*typedefs*/
+#include &lt;sys/dir.h>   /*directory entry structure*/
+#include &lt;sys/stat.h>  /*structure returned by stat*/
+
+#define BUFSIZE  256
+
+main(argc,argv) /*fsize:print file sizes*/
+char *argv[];
+{
+  char buf[BUFSIZE];
+  if(argc==1) { /*default:current directory*/
+    strcpy(buf,".");
+    fsize(buf);
+  } else
+    while(--argc > 0) {
+      strcpy(buf,*++argv);
+      fsize(buf);
+  }
+}
+
+    Функция fsize печатает размер файла. Если однако файл
+оказывается справочником, то fsize сначала вызывает функцию
+directory для обработки всех указанных в нем файлов. Обрати-
+те внимание на использование имен флагов S_IFMT и _IFDIR из
+файла stat.h.
+
+fsize(name) /*print size for name*/
+char *name;
+{
+  struct stat stbuf;
+  if(stat(name, &stbuf)== -1) {
+    fprintf(stderr,"fsize:can't find %s\n",name);
+    return;
+  }
+  if((stbuf.st_mode &amp; S_IFMT)==S_IFDIR)
+    directory(name);
+  printf("%8ld %s\n",stbuf.st_size,name);
+}
+    Функция directory является самой сложной. Однако значи-
+тельная ее часть связана с созданием для обрабатываемого в
+данный момент файла его полного имени, по которому можно
+восстановить путь в дереве.
+
+directory(name)    /*fsize for all files in name*/
+char *name;
+{
+  struct direct dirbuf;
+  char *nbp, *nep;
+  int i, fd;
+  nbp=name+strlen(name);
+  *nbp++='/'; /*add slash to directory name*/
+  if(nbp+DIRSIZ+2 >= name+bufsize) /*name too long*/
+    return;
+  if((fd=open(name,0))== -1)
+    return;
+  while( read(fd, (char *)&dirbuf, sizeof(dirbuf)) > 0 ) {
+    if(dirbuf.d_ino==0) /*slot not in use*/
+      continue;
+    if( strcmp(dirbuf.d_name,".")==0 || strcmp(dirbuf.d_name,"..")==0 )
+      continue; /*skip self and parent*/
+    for (i=0,nep=nbp; i&lt;DIRSIZ;i++)
+      *nep++ = dirbuf.d_name[i];
+    *nep++='\0';
+    fsize(name);
+  }
+  close(fd);
+  *--nbp='\0'; /*restore name*/
+}
+
+    Если некоторая дыра в справочнике в настоящее время не
+используется (потому что файл был удален), то в соответству-
+ющее i-узловое число равно нулю, и эта позиция пропускается.
+Каждый справочник также содержит запись в самом себе, назы-
+ваемую ".", и о своем родителе, ".."; они, очевидно, также
+должны быть пропущены, а то программа будет работать весьма
+и весьма долго.
+    Хотя программа fsize довольно специализированна, она все
+же демонстрирует пару важных идей. Во-первых, многие прог-
+раммы не являются "системными программами"; они только ис-
+пользуют информацию, форма или содержание которой определя-
+ется операционной системой. Во-вторых, для таких программ
+существенно, что представление этой информации входит только
+в стандартные "заголовочные файлы", такие как stat.h и
+dir.h, и что программы включают эти файлы, а не помещают
+фактические описания внутрь самих программ.</pre>
+	<script  language=JavaScript  src="../footer.js"></script>
+	</body>
+	
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=windows-1251">
+		<meta name="Description" content="K&R, 1st ed., 1978. Russian translation by <unknown>; chm-compiling by Sim&C, Belarus`2006">
+   		<title>2.2 Типы и размеры данных</title>
+		<link href="../style.css" rel="stylesheet" type="text/css" media="all">
+	</head>
+
+	<body>
+	<script  language=JavaScript  src="../header.js"></script>
+		<p>В языке C имеется только несколько основных типов данных:</p>
+		<blockquote><table class="intext" border="0" cellspacing="1" cellpadding="0">
+			<tr>
+				<td class="cellcaption">char</td>
+				<td class="celltext">один байт, в котором может находиться один символ из внутреннего набора символов</td>
+			</tr>
+			<tr>
+				<td class="cellcaption">int</td>
+				<td class="celltext">целое, обычно соответствующее естественному размеру целых в используемой машине</td>
+			</tr>
+			<tr>
+				<td class="cellcaption">float</td>
+				<td class="celltext">с плавающей точкой одинарной точности</td>
+			</tr>
+			<tr>
+				<td class="cellcaption">double</td>
+				<td class="celltext">с плавающей точкой двойной точности</td>
+			</tr>
+		</table></blockquote>
+		<p>Кроме того имеется ряд квалификаторов, которые можно использовать с типом int: short (короткое), long (длинное) и unsigned (без знака). Квалификаторы short и long указывают на различные размеры целых. Числа без знака подчиняются законам арифметики по модулю 2 в степени n, где n - число битов в int; числа без знаков всегда положительны. Описания с квалификаторами имеют вид:</p>
+		<blockquote>
+			<pre>short int x;
+long int y;
+unsigned int z;</pre>
+		</blockquote>
+		<p>Слово int в таких ситуациях может быть опущено, что обычно и делается.</p>
+		<p>Количество битов, отводимых под эти объекты, зависит от имеющейся машины; в таблице ниже приведены некоторые характерные значения.</p>
+
+<blockquote><pre>+----------------------------------------------------------+
+|           | DEC PDP-11 | HONEYWELL | IBM 370 | INTERDATA |
+|           |            |   6000    |         |   8/32    |
+|-----------+------------+-----------+---------+-----------|
+|           |   ASCII    |  ASCII    | EBCDIC  |   ASCII   |
+|-----------+------------+-----------+---------+-----------|
+| char      |  8-BITS    |  9-BITS   | 8-BITS  |  8-BITS   |
+| int       |    16      |    36     |   32    |    32     |
+| short     |    16      |    36     |   16    |    16     |
+| long      |    32      |    36     |   32    |    32     |
+| float     |    32      |    36     |   32    |    32     |
+| double    |    64      |    72     |   64    |    64     |
++----------------------------------------------------------+</pre></blockquote>
+
+<p>Цель состоит в том, чтобы short и long давали возможность в зависимости от практических нужд использовать различные длины целых; тип int отражает наиболее "естественный" размер конкретной машины. Как вы видите, каждый компилятор свободно интерпретирует short и long в соответствии со своими аппаратными средствами. Все, на что вы можете твердо полагаться, это то, что short не длиннее, чем long.</p>
+
+	<script  language=JavaScript  src="../footer.js"></script>
+	</body>
+	
+</html>

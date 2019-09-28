@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=windows-1251">
+		<meta name="Description" content="K&R, 1st ed., 1978. Russian translation by <unknown>; chm-compiling by Sim&C, Belarus`2006">
+   		<title>6.4 Указатели на структуры</title>
+		<link href="../style.css" rel="stylesheet" type="text/css" media="all">
+	</head>
+
+	<body>
+	<script  language=JavaScript  src="../header.js"></script>
+	<pre>    Чтобы проиллюстрировать некоторые соображения, связанные
+с использованием указателей и массивов структур, давайте
+снова составим программу подсчета ключевых строк, используя
+на этот раз указатели, а не индексы массивов.
+    Внешнее описание массива keytab не нужно изменять, но
+функции main и binary требуют модификации.
+
+ main()   /* count c keyword; pointer version */
+ {
+   int  t;
+   char word[MAXWORD];
+   struct key *binary(), *p;
+   while ((t = getword(word, MAXWORD) !=EOF)
+     if (t==LETTER)
+       if ((p=binary(word,keytab,nkeys)) !=NULL)
+         p-&gt;keycount++;
+   for (p=keytab; p&lt;keytab + nkeys; p++)
+     if (p-&gt;keycount &gt; 0)
+       printf(&quot;%4d %s/n&quot;, p-&gt;keycount, p-&gt;keyword);
+ }
+
+ struct key *binary(word, tab, n) /* find word */
+ char *word   /* in tab[0]...tab[n-1] */
+ struct key tab [];
+ int n;
+ {
+   int  cond;
+   struct key *low = &amp;tab[0];
+   struct key *high = &amp;tab[n-1];
+   struct key *mid;
+   while (low &lt;= high) {
+     mid = low + (high-low) / 2;
+     if ((cond = strcmp(word, mid-&gt;keyword)) &lt; 0)
+       high = mid - 1;
+     else if (cond &gt; 0)
+       low = mid + 1;
+     else
+       return(mid);
+   }
+   return(NULL);
+ }
+
+    Здесь имеется несколько моментов, которые стоит отме-
+тить. Во-первых, описание функции binari должно указывать,
+что она возвращает указатель на структуру типа key, а не на
+целое; это объявляется как в функции main, так и в binary.
+Если функция binari находит слово, то она возвращает указа-
+тель на него; если же нет, она возвращает NULL.
+    Во-вторых, все обращения к элементам массива keytab осу-
+ществляются через указатели. Это влечет за собой одно сущес-
+твенное изменение в функции binary: средний элемент больше
+нельзя вычислять просто по формуле
+
+  mid = (low + high) / 2
+
+потому что сложение двух указателей не дает какого-нибудь
+полезного результата (даже после деления на 2) и в действи-
+тельности является незаконным. Эту формулу надо заменить на
+
+  mid = low + (high-low) / 2
+
+в результате которой mid становится указателем на элемент,
+расположенный посередине между low и high.
+    Вам также следует разобраться в инициализации low и
+high. Указатель можно инициализировать адресом ранее опреде-
+ленного объекта; именно как мы здесь и поступили.
+    В функции main мы написали
+
+  for (p=keytab; p &lt; keytab + nkeys; p++)
+
+Если p является указателем структуры, то любая арифметика с
+p учитывает фактический размер данной структуры, так что p++
+увеличивает p на нужную величину, в результате чего p указы-
+вает на следующий элемент массива структур. Но не считайте,
+что размер структуры равен сумме размеров ее членов, - из-за
+требований выравнивания для различных объектов в структуре
+могут возникать &quot;дыры&quot;.
+    И, наконец, несколько второстепенный вопрос о форме за-
+писи программы. Если возвращаемая функцией величина имеет
+тип, как, например, в
+
+     struct key *binary(word, tab, n)
+
+Tо может оказаться, что имя функции трудно выделить среди
+текста. В связи с этим иногда используется другой стиль за-
+писи:
+
+      struct key *
+      binary(word, tab, n)
+
+Это главным образом дело вкуса; выберите ту форму, которая
+вам нравится, и придерживайтесь ее.</pre>
+	<script  language=JavaScript  src="../footer.js"></script>
+	</body>
+	
+</html>

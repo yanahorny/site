@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=windows-1251">
+		<meta name="Description" content="K&R, 1st ed., 1978. Russian translation by <unknown>; chm-compiling by Sim&C, Belarus`2006">
+   		<title>5.9 Инициализация массивов указателей</title>
+		<link href="../style.css" rel="stylesheet" type="text/css" media="all">
+	</head>
+
+	<body>
+	<script  language=JavaScript  src="../header.js"></script>
+	<pre>    Рассмотрим задачу написания функции month_name(n), кото-
+рая возвращает указатель на символьную строку, содержащую
+имя n-го месяца. Это идеальная задача для применения внут-
+реннего статического массива. Функция month_name содержит
+локальный массив символьных строк и при обращении к ней воз-
+вращает указатель нужной строки. Тема настоящего раздела -
+как инициализировать этот массив имен.
+
+char *month_name(n) /* return name of n-th month */
+int n;
+{
+  static char *name[] = {
+    "illegal month",
+    "january",
+    "february",
+    "march",
+    "april",
+    "may",
+    "jun",
+    "july",
+    "august",
+    "september",
+    "october",
+    "november",
+    "december"
+  };
+  return ((n &lt; 1 || n > 12) ? name[0] : name[n]);
+}
+
+Описание массива указателей на символы name точно такое же,
+как аналогичное описание lineptr в примере с сортировкой.
+Инициализатором является просто список символьных строк;
+каждая строка присваивается соответствующей позиции в масси-
+ве. Более точно, символы i-ой строки помещаются в какое-то
+иное место, а ее указатель хранится в name[i]. Поскольку
+размер массива name не указан, компилятор сам подсчитывает
+количество инициализаторов и соответственно устанавливает
+правильное число.
+</pre>
+	<script  language=JavaScript  src="../footer.js"></script>
+	</body>
+	
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=windows-1251">
+		<meta name="Description" content="K&R, 1st ed., 1978. Russian translation by <unknown>; chm-compiling by Sim&C, Belarus`2006">
+   		<title>3.7 Оператор break</title>
+		<link href="../style.css" rel="stylesheet" type="text/css" media="all">
+	</head>
+
+	<body>
+	<script  language=JavaScript  src="../header.js"></script>
+<p>Иногда бывает удобным иметь возможность управлять выходом из цикла иначе, чем проверкой условия в начале или в конце. Оператор break позволяет выйти из операторов for, while и do до окончания цикла точно так же, как и из переключателя. Оператор break приводит к немедленному выходу из самого внутреннего охватывающего его цикла (или переключателя).</p>
+<p>Следующая программа удаляет хвостовые пробелы и табуляции из конца каждой строки файла ввода. Она использует оператор break для выхода из цикла, когда найден крайний правый отличный от пробела и табуляции символ.</p>
+
+<blockquote><pre class="cpp">#define MAXLINE 1000
+main()    /* remove trailing blanks and tabs */
+{
+  int n;
+  char line[MAXLINE];
+  while ((n = getline(line, MAXLINE)) > 0) {
+    while (--n >= 0)
+      if (line[n] != ' ' &amp;&amp; line[n] != '\t' &amp;&amp; line[n] != '\n')
+        break;
+    line[n+1] = '\0';
+    printf("%s\n",line);
+  }
+}</pre></blockquote>
+
+<p>Функция getline возвращает длину строки. Внутренний цикл начинается с последнего символа line (напомним, что --n уменьшает n до использования его значения) и движется в обратном направлении в поиске первого символа, который отличен от пробела, табуляции или новой строки. Цикл прерывается, когда либо найден такой символ, либо n становится отрицательным (т.е., когда просмотрена вся строка). Советуем вам убедиться, что такое поведение правильно и в том случае, когда строка состоит только из символов пустых промежутков.</p>
+<p>В качестве альтернативы к brеаk можно ввести проверку в сам цикл:</p>
+
+<blockquote><pre>while ((n = getline(line, MAXLINE)) > 0) {
+  while (--n >= 0 &amp;&amp; (line[n] == ' ' || line[n] == '\t' || line[n] == '\n'))
+  ;
+  ...
+}</pre></blockquote>
+
+<p>Это уступает предыдущему варианту, так как проверка становится труднее для понимания. Проверок, которые требуют переплетения &amp;&amp;, ||, ! и круглых скобок, по возможности следует избегать.</p>
+
+	<script  language=JavaScript  src="../footer.js"></script>
+	</body>
+	
+</html>

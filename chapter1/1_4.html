@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=windows-1251">
+		<meta name="Description" content="K&R, 1st ed., 1978. Russian translation by <unknown>; chm-compiling by Sim&C, Belarus`2006">
+		<title>1.4 Символические константы</title>
+		<link href="../style.css" rel="stylesheet" type="text/css" media="all">
+	</head>
+
+	<body>
+	<script  language=JavaScript  src="../header.js"></script>
+		<p>Последнее замечание, прежде чем мы навсегда оставим программу перевода температур. Прятать &quot;магические числа&quot;, такие как 300 и 20, внутрь программы - это неудачная практика; они дают мало информации тем, кто, возможно, должен будет разбираться в этой программе позднее, и их трудно изменять систематическим образом. К счастью в языке C предусмотрен способ, позволяющий избежать таких &quot;магических чисел&quot;. Используя конструкцию <code>#define</code>, вы можете в начале программы определить символическое имя или символическую константу, которая будет конкретной строкой символов. Впоследствии компилятор заменит все не заключенные в кавычки появления этого имени на соответствующую строку. Фактически это имя может быть заменено абсолютно произвольным текстом, не обязательно цифрами</p>
+		<blockquote>
+			<pre class="cpp">#define  LOWER 0/* lower limit of table */
+#define  UPPER 300  /* upper limit */
+#define  STEP  20  /* step size */
+main () /* fahrenheit-celsius table */
+{
+  int fahr;
+  for (fahr = LOWER; fahr &lt;= UPPER; fahr =fahr + STEP)
+    printf(&quot;%4d %6.1f\n&quot;, fahr, (5.0/9.0)*(fahr-32));
+}</pre>
+		</blockquote>
+		<p>величины <code>LOWER</code>, <code>UPPER</code> и <code>STEP</code> являются константами и поэтому они не указываются в описаниях. Символические имена обычно пишут прописными буквами, чтобы их было легко отличить от написанных строчными буквами имен переменных. Отметим, что в конце определения не ставится точка с запятой. Так как подставляется вся строка, следующая за определенным именем, то это привело бы к слишком большому числу точек с запятой в операторе <code>for</code>.</p>
+		<script  language=JavaScript  src="../footer.js"></script>
+	</body>
+	
+</html>

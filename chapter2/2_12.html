@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=windows-1251">
+		<meta name="Description" content="K&R, 1st ed., 1978. Russian translation by <unknown>; chm-compiling by Sim&C, Belarus`2006">
+   		<title>2.12 Старшинство и порядок вычисления</title>
+		<link href="../style.css" rel="stylesheet" type="text/css" media="all">
+	</head>
+
+	<body>
+	<script  language=JavaScript  src="../header.js"></script>
+<p>В приводимой ниже таблице сведены правила старшинства и ассоциативности всех операций, включая и те, которые мы еще не обсуждали. Операции, расположенные в одной строке, имеют один и тот же уровень старшинства; строки расположены в порядке убывания старшинства. Так, например, операции *, / и % имеют одинаковый уровень старшинства, который выше, чем уровень операций + и -.</p>
+		<blockquote><table class="intext" border="0" cellspacing="1" cellpadding="0">
+			<tr>
+				<td class="cellcaption">
+					<div align="center">
+ 						Оператор
+					</div>
+				</td>
+				<td class="cellcaption">
+					<div align="center">
+						<font size="-1">Последовательность<br>
+							выполнения</font></div>
+				</td>
+			</tr>
+			<tr>
+				<td class="celltext"><code><b>() [] -&gt; .</b></code></td>
+				<td class="celltext" align="center">
+					<div align="center">
+						слева направо</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="celltext"><code><b>!  ~  ++  --  -  (type)  * &amp;  sizeof</b></code></td>
+				<td class="celltext">
+					<div align="center">
+						<b>
+						справа налево</b></div>
+				</td>
+			</tr>
+			<tr>
+				<td class="celltext"><code><b>*  /  %</b></code></td>
+				<td class="celltext">
+					<div align="center">
+						слева направо</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="celltext"><code><b>+ - </b></code></td>
+				<td class="celltext">
+					<div align="center">
+						слева направо
+</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="celltext"><code><b>&lt;&lt;  &gt;&gt;</b></code></td>
+				<td class="celltext">
+					<div align="center">
+						слева направо</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="celltext"><code><b>&lt;  &lt;= &gt;  &gt;=</b></code></td>
+				<td class="celltext">
+					<div align="center">
+						слева направо</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="celltext"><code><b>==  !=</b></code></td>
+				<td class="celltext">
+					<div align="center">
+						слева направо</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="celltext"><code><b>&amp;</b></code></td>
+				<td class="celltext">
+					<div align="center">
+						слева направо</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="celltext"><code><b>^</b></code></td>
+				<td class="celltext">
+					<div align="center">
+						слева направо</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="celltext"><code><b>|</b></code></td>
+				<td class="celltext">
+					<div align="center">
+						слева направо</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="celltext"><code><b>&amp;&amp;</b></code></td>
+				<td class="celltext">
+					<div align="center">
+						слева направо</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="celltext"><code><b>||</b></code></td>
+				<td class="celltext">
+					<div align="center">
+						слева направо</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="celltext"><code><b>?:</b></code></td>
+				<td class="celltext">
+					<div align="center">
+						<b>
+						справа налево</b></div>
+				</td>
+			</tr>
+			<tr>
+				<td class="celltext"><code><b>= += -= *= /= %= &lt;&lt;= &gt;&gt;= |= ^= &amp;=</b></code></td>
+				<td class="celltext">
+					<div align="center">
+						<b>
+						справа налево</b></div>
+				</td>
+			</tr>
+			<tr>
+				<td class="celltext"><b><code>, </code></b>(<a href="../chapter3/3.html">глава&nbsp;3</a>)</td>
+				<td class="celltext">
+					<div align="center">
+						слева направо</div>
+				</td>
+			</tr>
+		</table></blockquote>
+				
+<p>Операции -&gt; и . используются для доступа к элементам структур; они будут описаны в <a href="../chapter6/6.html">главе&nbsp;6</a> вместе с sizeof (размер объекта). В <a href="../chapter5/5.html">главе&nbsp;5</a> обсуждаются операции * (косвенная адресация) и &amp; (адрес).</p>
+<p>Отметим, что уровень старшинства побитовых логических операций &amp;, ^ и | ниже уровня операций == и !=. Это приводит к тому, что осуществляющие побитовую проверку выражения, подобные</p>
+
+<blockquote>
+			<pre>if ((x &amp; MASK) == 0) ...</pre>
+		</blockquote>
+
+<p>для получения правильных результатов должны заключаться в круглые скобки.</p>
+<p>Как уже отмечалось ранее, выражения, в которые входит одна из ассоциативных и коммутативных операций (*, +, &amp;, ^, |), могут перегруппировываться, даже если они заключены в круглые скобки. В большинстве случаев это не приводит к каким бы то ни было расхождениям; в ситуациях, где такие расхождения все же возможны, для обеспечения нужного порядка вычислений можно использовать явные промежуточные переменные.</p>
+<p>В языке C, как и в большинстве языков, не фиксируется порядок вычисления операндов в операторе. Например в операторе вида</p>
+
+<blockquote>
+			<pre>x = f() + g();</pre>
+		</blockquote>
+
+<p>сначала может быть вычислено f, а потом g, и наоборот; поэтому, если либо f, либо g изменяют внешнюю переменную, от которой зависит другой операнд, то значение x может зависеть от порядка вычислений. Для обеспечения нужной последовательности промежуточные результаты можно опять запоминать во временных переменных.</p>
+<p>Подобным же образом не фиксируется порядок вычисления аргументов функции, так что оператор</p>
+
+<blockquote>
+			<pre>printf("%d %d\n", ++n, power(2,n));</pre>
+		</blockquote>
+
+<p>может давать (и действительно дает) на разных машинах разные результаты в зависимости от того, увеличивается ли n до или после обращения к функции power. Правильным решением, конечно, является запись</p>
+
+<blockquote><pre>++n;
+printf("%d %d\n", n, power(2,n));</pre></blockquote>
+
+<p>Обращения к функциям, вложенные операции присваивания, операции увеличения и уменьшения приводят к так называемым "побочным эффектам" - некоторые переменные изменяются как побочный результат вычисления выражений. В любом выражении, в котором возникают побочные эффекты, могут существовать очень тонкие зависимости от порядка, в котором определяются входящие в него переменные. Примером типичной неудачной ситуации является оператор</p>
+
+<blockquote>
+			<pre>a[i] = i++;</pre>
+		</blockquote>
+
+<p>Возникает вопрос, старое или новое значение i служит в качестве индекса. Компилятор может поступать разными способами и в зависимости от своей интерпретации выдавать разные результаты. Тот случай, когда происходят побочные эффекты (присваивание фактическим переменным), - оставляется на усмотрение компилятора, так как наилучший порядок сильно зависит от архитектуры машины.</p>
+<p>Из этих рассуждений вытекает такая мораль: написание программ, зависящих от порядка вычислений, является плохим методом программирования на любом языке. Конечно, необходимо знать, чего следует избегать, но если вы не в курсе, как некоторые вещи реализованы на разных машинах, это неведение может предохранить вас от неприятностей. (Отладочная программа LINT укажет большинство мест, зависящих от порядка вычислений).</p>
+
+	<script  language=JavaScript  src="../footer.js"></script>
+	</body>
+	
+</html>

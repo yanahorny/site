@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=windows-1251">
+		<meta name="Description" content="K&R, 1st ed., 1978. Russian translation by <unknown>; chm-compiling by Sim&C, Belarus`2006">
+   		<title>8.5 Пример - реализация функций fopen и getc</title>
+		<link href="../style.css" rel="stylesheet" type="text/css" media="all">
+	</head>
+
+	<body>
+	<script  language=JavaScript  src="../header.js"></script>
+	<pre>    Давайте теперь на примере реализации функций fopen и
+getc из стандартной библиотеки подпрограмм продемонстрируем,
+как некоторые из описанных элементов объединяются вместе.
+    Напомним, что в стандартной библиотеке файлы описыватся
+посредством указателей файлов, а не дескрипторов. Указатель
+файла является указателем на структуру, которая содержит
+несколько элементов информации о файле: указатель буфера,
+чтобы файл мог читаться большими порциями; счетчик числа
+символов, оставшихся в буфере; указатель следующей позиции
+символа в буфере; некоторые признаки, указывающие режим чте-
+ния или записи и т.д.; дескриптор файла.
+    Описывающая файл структура данных содержится в файле
+stdio.h, который должен включаться (посредством #include) в
+любой исходный файл, в котором используются функции из стан-
+дартной библиотеки. Он также включается функциями этой биб-
+лиотеки. В приводимой ниже выдержке из файла stdio.h имена,
+предназначаемые только для использования функциями библиоте-
+ки, начинаются с подчеркивания, с тем чтобы уменьшить веро-
+ятность совпадения с именами в программе пользователя.
+
+#define _BUFSIZE 512
+#define _NFILE   20 /*files that can be handled*/
+
+typedef struct _iobuf {
+  char *_ptr;   /*next character position*/
+  int  _cnt;    /*number of characters left*/
+  char *_base;  /*location of buffer*/
+  int  _flag;   /*mode of file access*/
+  int  _fd;     /*file descriptor*/
+} FILE;
+extern FILE _iob[_NFILE];
+
+#define   stdin         (&_IOB[0])
+#define   stdout        (&_IOB[1])
+#define   stderr        (&_IOB[2])
+
+#define   _READ   01  /* file open for reading */
+#define   _WRITE  02  /* file open for writing */
+#define   _UNBUF  04  /* file is unbuffered */
+#define   _BIGBUF 010 /* big buffer allocated */
+#define   _EOF 020 /* eof has occurred on this file */
+#define   _ERR 040 /* error has occurred on this file */
+#define   NULL 0
+#define   EOF  (-1)
+
+#define   getc(p) (--(p)->_cnt >= 0 \
+  ? *(p)->_ptr++ &amp; 0377 : _fillbuf(p))
+#define   getchar() getc(stdin)
+
+#define   putc(x,p) (--(p)->_cnt >= 0 \
+  ? *(p)->_ptr++ = (x) : _flushbuf((x),p))
+#define   putchar(x)       putc(x,stdout)
+
+    В нормальном состоянии макрос getc просто уменьшает
+счетчик, передвигает указатель и возвращает символ. (Если
+определение #define слишком длинное, то оно продолжается с
+помощью обратной косой черты). Если однако счетчик становит-
+ся отрицательным, то getc вызывает функцию _fillbuf, которая
+снова заполняет буфер, реинициализирует содержимое структуры
+и возвращает символ. Функция может предоставлять переносимый
+интерфейс и в то же время содержать непереносимые конструк-
+ции: getc маскирует символ числом 0377, которое подавляет
+знаковое расширение, осуществляемое на PDP-11, и тем самым
+гарантирует положительность всех символов.
+    Хотя мы не собираемся обсуждать какие-либо детали, мы
+все же включили сюда определение макроса putc, для того что-
+бы показать, что она работает в основном точно также, как и
+getc, обращаясь при заполнении буфера к функции _flushbuf.
+    Теперь может быть написана функция fopen. Большая часть
+программы функции fopen связана с открыванием файла и распо-
+ложением его в нужном месте, а также с установлением битов
+признаков таким образом, чтобы они указывали нужное состоя-
+ние. Функция fopen не выделяет какой-либо буферной памяти;
+это делается функцией _fillbuf при первом чтении из файла.
+
+#include &lt;stdio.h>
+#define  pmode  0644   /*r/w for owner;r for others*/
+FILE *fopen(name, mode) /*open file, return file ptr*/
+register char *name, *mode;
+{
+  register int fd;
+  register FILE *fp;
+  if(*mode !='r'&amp;&amp;*mode !='w'&amp;&amp;*mode !='a') {
+    fprintf(stderr,"illegal mode %s opening %s\n", mode, name);
+    exit(1);
+  }
+  for (fp=_iob; fp&lt;_iob+_nfile; fp++)
+    if((fp->_flag &amp; (_READ | _WRITE))==0)
+      break; /*found free slot*/
+  if(fp>=_iob+_nfile) /*no free slots*/
+    return(NULL);
+  if(*mode=='w') /*access file*/
+    fd=creat(name,pmode);
+  else if(*mode=='a') {
+    if((fd=open(name,1))==-1)
+      fd=creat(name,pmode);
+    lseek(fd,ol,2);
+  } else
+    fd=open(name,0);
+  if(fd==-1) /*couldn't access name*/
+    return(NULL);
+  fp->_fd=fd;
+  fp->_cnt=0;
+  fp->_base = NULL;
+  fp->_flag &amp;= ~(_READ | _WRITE); // tild '~' is added by Sim&C
+  fp->_flag |= (*mode=='r') ? _READ : _WRITE;
+  return(fp);
+}
+
+    Функция _fillbuf несколько более сложная. Основная труд-
+ность заключается в том, что _fillbuf стремится разрешить
+доступ к файлу и в том случае, когда может не оказаться дос-
+таточно места в памяти для буферизации ввода или вывода. Ес-
+ли пространство для нового буфера может быть получено обра-
+щением к функции calloc, то все отлично; если же нет, то
+_fillbuf осуществляет небуферизованный ввод/вывод, исполь-
+зуя отдельный символ, помещенный в локальном массиве.
+
+#include  &lt;stdio.h>
+_fillbuf(fp) /*allocate and fill input buffer*/
+register FILE *fp;
+{
+  static char smallbuf[_NFILE]; /*for unbuffered i/o*/
+  char *calloc();
+  if( (fr->_flag&_READ)==0 || (fp->_flag&(_EOF|_ERR))!=0 )
+    return(EOF);
+  while(fp->_base==NULL) /*find buffer space*/
+    if(fp->_flag &amp; _UNBUF) /*unbuffered*/
+      fp->_base=&smallbuf[fp->_fd];
+    else if((fp->_base=calloc(_BUFSIZE,1))==NULL)
+      fp->_flag |=_UNBUF; /*can't get big buf*/
+    else
+      fp->_flag |=_BIGBUF; /*got big one*/
+  fp->_ptr=fp->_base;
+  fp->_cnt = read( fp->_fd, fp->_ptr, fp->_flag &amp; _UNBUFf ? 1 : _BUFSIZE );
+  if( --fp->_cnt &lt; 0) {
+    if(fp->_cnt== -1)
+      fp->_flag | = _EOF;
+    else
+      fp->_flag | = _ERR;
+    fp->_cnt = 0;
+    return(EOF);
+  }
+  return(*fp->_ptr++ &amp; 0377); /*make char positive*/
+}
+
+При первом обращении к getc для конкретного файла счетчик
+оказывается равным нулю, что приводит к обращению к
+_fillbuf. Если функция _fillbuf найдет, что этот файл не от-
+крыт для чтения, она немедленно возвращает EOF. В противном
+случае она пытается выделить большой буфер, а если ей это не
+удается, то буфер из одного символа. При этом она заносит в
+_flag соответствующую информацию о буферизации.
+    Раз буфер уже создан, функция _fillbuf просто вызывает
+функцию read для его заполнения, устанавливает счетчик и
+указатели и возвращает символ из начала буфера.
+    Единственный оставшийся невыясненным вопрос состоит в
+том, как все начинается. Массив _iob должен быть определен и
+инициализирован для stdin, stdout и stderr:
+
+FILE _iob[_NFILE] = {
+  {NULL, 0, NULL,  _READ, 0}, /*stdin*/
+  {NULL, 0, NULL, _WRITE, 1}, /*stdout*/
+  {NULL, 0, NULL, _WRITE | _UNBUF, 2} /*stderr*/
+};
+
+Из инициализации части _flag этого массива структур видно,
+что файл stdin предназначен для чтения, файл stdout - для
+записи и файл stderr - для записи без использования буфера.
+
+Упражнение 8-3
+    Перепишите функции fopen и _fillbuf, используя поля
+вместо явных побитовых операций.
+
+Упражнение 8-4
+    Разработайте и напишите функции _flushbuf и fclose.
+
+Упражнение 8-5
+    Стандартная библиотека содержит функцию
+
+  fseek(fp, offset, origin)
+
+которая идентична функции lseek, исключая то, что fp являет-
+ся указателем файла, а не дескриптором файла. Напишите
+fseek. Убедитесь, что ваша fseek правильно согласуется с бу-
+феризацией, сделанной для других функций библиотеки.</pre>
+	<script  language=JavaScript  src="../footer.js"></script>
+	</body>
+	
+</html>

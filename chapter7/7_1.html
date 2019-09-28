@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=windows-1251">
+		<meta name="Description" content="K&R, 1st ed., 1978. Russian translation by <unknown>; chm-compiling by Sim&C, Belarus`2006">
+   		<title>7.1 Обращение к стандартной библиотеке</title>
+		<link href="../style.css" rel="stylesheet" type="text/css" media="all">
+	</head>
+
+	<body>
+	<script  language=JavaScript  src="../header.js"></script>
+	<pre>    Каждый исходный файл, который обращается к функции из
+стандартной библиотеки, должен вблизи начала содержать стро-
+ку
+
+#include &lt;stdio.h&gt;
+
+в файле stdio.h определяются некоторые макросы и переменные,
+используемые библиотекой ввода/вывода. Использование угловых
+скобок вместо обычных двойных кавычек - указание компилятору
+искать этот файл в справочнике, содержащем заголовки стан-
+дартной информации (на системе UNIX обычно lusrlinelude).
+    Кроме того, при загрузке программы может оказаться необ-
+ходимым указать библиотеку явно; на системе PDP-11 UNIX,
+например, команда компиляции программы имела бы вид:
+
+cc  исходные файлы и т.д. -ls
+
+где -ls указывает на загрузку из стандартной библиотеки.</pre>
+	<script  language=JavaScript  src="../footer.js"></script>
+	</body>
+	
+</html>

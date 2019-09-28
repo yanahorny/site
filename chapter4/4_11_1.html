@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=windows-1251">
+		<meta name="Description" content="K&R, 1st ed., 1978. Russian translation by <unknown>; chm-compiling by Sim&C, Belarus`2006">
+   		<title>4.11.1 Включение файлов</title>
+		<link href="../style.css" rel="stylesheet" type="text/css" media="all">
+	</head>
+
+	<body>
+	<script  language=JavaScript  src="../header.js"></script>
+	<pre>    Для облегчения работы с наборами конструкций #define и
+описаний (среди прочих средств) в языке C предусмотрена
+возможность включения файлов. Любая строка вида
+
+ #include "filename"
+
+заменяется содержимым файла с именем filename. (Кавычки обя-
+зательны). Часто одна или две строки такого вида появляются
+в начале каждого исходного файла, для того чтобы включить
+общие конструкции #define и описания extern для глобальных
+переменных. Допускается вложенность конструкций #include.
+    Конструкция #include является предпочтительным способом
+связи описаний в больших программах. Этот способ гарантиру-
+ет, что все исходные файлы будут снабжены одинаковыми опре-
+делениями и описаниями переменных, и, следовательно, исклю-
+чает особенно неприятный сорт ошибок. Естественно, когда ка-
+кой-то включаемый файл изменяется, все зависящие от него
+файлы должны быть перекомпилированы.</pre>
+	<script  language=JavaScript  src="../footer.js"></script>
+	</body>
+	
+</html>

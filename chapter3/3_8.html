@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=windows-1251">
+		<meta name="Description" content="K&R, 1st ed., 1978. Russian translation by <unknown>; chm-compiling by Sim&C, Belarus`2006">
+   		<title>3.8 Оператор continue</title>
+		<link href="../style.css" rel="stylesheet" type="text/css" media="all">
+	</head>
+
+	<body>
+	<script  language=JavaScript  src="../header.js"></script>
+<p>Оператор continue родственен оператору break, но используется реже; он приводит к началу следующей итерации охватывающего цикла (for, while, do). В циклах while и do это означает непосредственный переход к выполнению проверочной части; в цикле for управление передается на шаг реинициализации. (Оператор continue применяется только в циклах, но не в переключателях. Оператор continue внутри переключателя внутри цикла вызывает выполнение следующей итерации цикла).</p>
+<p>В качестве примера приведем фрагмент, который обрабатывает только положительные элементы массива а; отрицательные значения пропускаются.</p>
+
+<blockquote><pre>for (i = 0; i &lt; n; i++) {
+  if (a[i] &lt; 0) /* skip negative elements */
+    continue;
+  ...  /* do positive elements */
+}</pre></blockquote>
+		<p>Оператор continue часто используется, когда последующая часть цикла оказывается слишком сложной, так что рассмотрение условия, обратного проверяемому, приводит к слишком глубокому уровню вложенности программы.</p>
+		<div class="exercise">
+			<p><span class="exercisetitle">Упражнение 3-6</span></p>
+			<p>Напишите программу копирования ввода на вывод, с тем исключением, что из каждой группы последовательных одинаковых строк выводится только одна. (Это простой вариант утилиты uniq систем UNIX).</p>
+		</div>
+		<script  language=JavaScript  src="../footer.js"></script>
+	</body>
+	
+</html>
